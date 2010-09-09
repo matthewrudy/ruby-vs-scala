@@ -2,13 +2,13 @@ require 'set'
 
 module Dictionary
   
-  WORDS = File.read("dict/3letters").split("\n").compact + File.read("dict/4letters").split("\n").compact
+  WORDS = Set.new(File.read("dict/3letters").split("\n").compact + File.read("dict/4letters").split("\n").compact)
   
   def self.is_word?(word)
     WORDS.include?(word)
   end
   
-  # /*scrabble scores*/
+  # scrabble scores
   LETTER_SCORES = {
     "A" => 1,
     "B" => 3,
@@ -39,9 +39,9 @@ module Dictionary
   }
   
   def self.letter_score(letter)
-    LETTER_SCORES(letter)
+    LETTER_SCORES[letter]
   end
-  
+
   def self.scrabble_score(word)
     word.split("").inject(0) {|sum, letter| sum + letter_score(letter)}
   end
@@ -51,11 +51,14 @@ end
 # for each word in the dictionary
 # verify it is a word
 # and calculate its score
-10.times do
+n = (ARGV[0] || 10).to_i
+
+puts "#{n} repeats"
+n.times do
   
-Dictionary::WORDS.each do |word|
-  Dictionary.is_word?(word)
-  Dictionary.scrabble_score(word)
-end
+  Dictionary::WORDS.each do |word|
+    Dictionary.is_word?(word)
+    Dictionary.scrabble_score(word)
+  end
 
 end
